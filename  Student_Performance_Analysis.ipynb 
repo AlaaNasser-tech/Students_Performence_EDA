@@ -1,0 +1,1522 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOBsVstoVWZxDbpO9TRRHCh",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/AlaaNasser-tech/Students_Performence_EDA/blob/main/%20Student_Performance_Analysis.ipynb%20\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# **Project Title: Students Performance in Exams Analysis:**\n",
+        "\n",
+        "> Description: This notebook is dedicated to performing exploratory data analysis (EDA) and data wrangling on the Students Performance dataset\n",
+        "\n",
+        "> The goal is to uncover insights regarding students' demographics, test preparation impact, and exam score correlations."
+      ],
+      "metadata": {
+        "id": "d4RsWqFxGfYU"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Step 1 : Import Libraries and Load Dataset\n",
+        "\n",
+        "**Objective**: To import necessary data science libraries and load the dataset into memory.\n",
+        "\n",
+        "**Method**: Using Pandas, NumPy, Matplotlib, and Seaborn to read the CSV file."
+      ],
+      "metadata": {
+        "id": "oBDylkcmHFAU"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "import seaborn as sns\n",
+        "\n",
+        "# Load the dataset\n",
+        "df = pd.read_csv('StudentsPerformance.csv')\n",
+        "df.head()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 206
+        },
+        "id": "RFhWIQTnH6_Z",
+        "outputId": "fe6e7e61-eef2-4a53-89b9-817e3605c3b4"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "   gender race/ethnicity parental level of education         lunch  \\\n",
+              "0  female        group B           bachelor's degree      standard   \n",
+              "1  female        group C                some college      standard   \n",
+              "2  female        group B             master's degree      standard   \n",
+              "3    male        group A          associate's degree  free/reduced   \n",
+              "4    male        group C                some college      standard   \n",
+              "\n",
+              "  test preparation course  math score  reading score  writing score  \n",
+              "0                    none          72             72             74  \n",
+              "1               completed          69             90             88  \n",
+              "2                    none          90             95             93  \n",
+              "3                    none          47             57             44  \n",
+              "4                    none          76             78             75  "
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-5ea04e67-b32f-4f6c-94da-75475b7007ea\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>gender</th>\n",
+              "      <th>race/ethnicity</th>\n",
+              "      <th>parental level of education</th>\n",
+              "      <th>lunch</th>\n",
+              "      <th>test preparation course</th>\n",
+              "      <th>math score</th>\n",
+              "      <th>reading score</th>\n",
+              "      <th>writing score</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>female</td>\n",
+              "      <td>group B</td>\n",
+              "      <td>bachelor's degree</td>\n",
+              "      <td>standard</td>\n",
+              "      <td>none</td>\n",
+              "      <td>72</td>\n",
+              "      <td>72</td>\n",
+              "      <td>74</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>female</td>\n",
+              "      <td>group C</td>\n",
+              "      <td>some college</td>\n",
+              "      <td>standard</td>\n",
+              "      <td>completed</td>\n",
+              "      <td>69</td>\n",
+              "      <td>90</td>\n",
+              "      <td>88</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>female</td>\n",
+              "      <td>group B</td>\n",
+              "      <td>master's degree</td>\n",
+              "      <td>standard</td>\n",
+              "      <td>none</td>\n",
+              "      <td>90</td>\n",
+              "      <td>95</td>\n",
+              "      <td>93</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>male</td>\n",
+              "      <td>group A</td>\n",
+              "      <td>associate's degree</td>\n",
+              "      <td>free/reduced</td>\n",
+              "      <td>none</td>\n",
+              "      <td>47</td>\n",
+              "      <td>57</td>\n",
+              "      <td>44</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>male</td>\n",
+              "      <td>group C</td>\n",
+              "      <td>some college</td>\n",
+              "      <td>standard</td>\n",
+              "      <td>none</td>\n",
+              "      <td>76</td>\n",
+              "      <td>78</td>\n",
+              "      <td>75</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-5ea04e67-b32f-4f6c-94da-75475b7007ea')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-5ea04e67-b32f-4f6c-94da-75475b7007ea button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-5ea04e67-b32f-4f6c-94da-75475b7007ea');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "variable_name": "df",
+              "summary": "{\n  \"name\": \"df\",\n  \"rows\": 1000,\n  \"fields\": [\n    {\n      \"column\": \"gender\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          \"male\",\n          \"female\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"race/ethnicity\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 5,\n        \"samples\": [\n          \"group C\",\n          \"group E\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"parental level of education\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 6,\n        \"samples\": [\n          \"bachelor's degree\",\n          \"some college\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"lunch\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          \"free/reduced\",\n          \"standard\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"test preparation course\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          \"completed\",\n          \"none\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"math score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 15,\n        \"min\": 0,\n        \"max\": 100,\n        \"num_unique_values\": 81,\n        \"samples\": [\n          55,\n          72\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"reading score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 14,\n        \"min\": 17,\n        \"max\": 100,\n        \"num_unique_values\": 72,\n        \"samples\": [\n          78,\n          23\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"writing score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 15,\n        \"min\": 10,\n        \"max\": 100,\n        \"num_unique_values\": 77,\n        \"samples\": [\n          75,\n          76\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    }\n  ]\n}"
+            }
+          },
+          "metadata": {},
+          "execution_count": 1
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## **Result**\n",
+        "Successfully imported all required libraries and displayed the first few rows of the dataset\n",
+        "The data is loaded correctly and ready for exploratory analysis and cleaning."
+      ],
+      "metadata": {
+        "id": "whbJo1O9IRJN"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# `EDA Questions`"
+      ],
+      "metadata": {
+        "id": "lfiQ8TMgN14O"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# **Question 1**\n",
+        "\n",
+        "## Which gender performs better in each subject?\n",
+        "\n",
+        "**Objective**: To compare the performance of male and female students across different subjects.\n",
+        "\n",
+        "**Method**: Group the dataset by gender and calculate the average score for each subject using Pandas. *italicized text*"
+      ],
+      "metadata": {
+        "id": "OIwcvpjtJSxH"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.groupby('gender')[['math score', 'reading score', 'writing score']].mean()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 143
+        },
+        "id": "oRlaXTO4Jgwe",
+        "outputId": "6fc55ae3-2244-4c3c-debf-c64cb2b121df"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "        math score  reading score  writing score\n",
+              "gender                                          \n",
+              "female   63.633205      72.608108      72.467181\n",
+              "male     68.728216      65.473029      63.311203"
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-a8b493d5-85cc-485d-b034-a887bfafc666\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>math score</th>\n",
+              "      <th>reading score</th>\n",
+              "      <th>writing score</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>gender</th>\n",
+              "      <th></th>\n",
+              "      <th></th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>female</th>\n",
+              "      <td>63.633205</td>\n",
+              "      <td>72.608108</td>\n",
+              "      <td>72.467181</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>male</th>\n",
+              "      <td>68.728216</td>\n",
+              "      <td>65.473029</td>\n",
+              "      <td>63.311203</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-a8b493d5-85cc-485d-b034-a887bfafc666')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-a8b493d5-85cc-485d-b034-a887bfafc666 button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-a8b493d5-85cc-485d-b034-a887bfafc666');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "summary": "{\n  \"name\": \"df\",\n  \"rows\": 2,\n  \"fields\": [\n    {\n      \"column\": \"gender\",\n      \"properties\": {\n        \"dtype\": \"string\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          \"male\",\n          \"female\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"math score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 3.60271692337657,\n        \"min\": 63.633204633204635,\n        \"max\": 68.72821576763485,\n        \"num_unique_values\": 2,\n        \"samples\": [\n          68.72821576763485,\n          63.633204633204635\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"reading score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 5.045262789371122,\n        \"min\": 65.47302904564316,\n        \"max\": 72.60810810810811,\n        \"num_unique_values\": 2,\n        \"samples\": [\n          65.47302904564316,\n          72.60810810810811\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"writing score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 6.474254236619937,\n        \"min\": 63.31120331950208,\n        \"max\": 72.46718146718146,\n        \"num_unique_values\": 2,\n        \"samples\": [\n          63.31120331950208,\n          72.46718146718146\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    }\n  ]\n}"
+            }
+          },
+          "metadata": {},
+          "execution_count": 2
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## **Result**\n",
+        "Generated a table showing the mean scores for math, reading, and writing categorized by gender.\n",
+        "\n",
+        "Interpretation: The results show that male students achieved a higher average in math (68.72), whereas female students achieved higher averages in reading (72.60) and writing (72.48)"
+      ],
+      "metadata": {
+        "id": "Q9NaxM1RJsqa"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Question 2  \n",
+        "## Does test preparation improve performance?\n",
+        "\n",
+        "**Objective**: To analyze the impact of the test preparation course on student exam scores.\n",
+        "**Method**: Group data by test preparation status and calculate mean scores."
+      ],
+      "metadata": {
+        "id": "taoJyUfPKtVl"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.groupby('test preparation course')[['math score', 'reading score', 'writing score']].mean()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 143
+        },
+        "id": "OaPAnerELRL3",
+        "outputId": "4add3de1-605b-4c61-8f78-50ad46df08d6"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "                         math score  reading score  writing score\n",
+              "test preparation course                                          \n",
+              "completed                 69.695531      73.893855      74.418994\n",
+              "none                      64.077882      66.534268      64.504673"
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-923003c6-bae9-4db9-a9fc-30bc38079b3b\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>math score</th>\n",
+              "      <th>reading score</th>\n",
+              "      <th>writing score</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>test preparation course</th>\n",
+              "      <th></th>\n",
+              "      <th></th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>completed</th>\n",
+              "      <td>69.695531</td>\n",
+              "      <td>73.893855</td>\n",
+              "      <td>74.418994</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>none</th>\n",
+              "      <td>64.077882</td>\n",
+              "      <td>66.534268</td>\n",
+              "      <td>64.504673</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-923003c6-bae9-4db9-a9fc-30bc38079b3b')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-923003c6-bae9-4db9-a9fc-30bc38079b3b button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-923003c6-bae9-4db9-a9fc-30bc38079b3b');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "summary": "{\n  \"name\": \"df\",\n  \"rows\": 2,\n  \"fields\": [\n    {\n      \"column\": \"test preparation course\",\n      \"properties\": {\n        \"dtype\": \"string\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          \"none\",\n          \"completed\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"math score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 3.972277777404919,\n        \"min\": 64.0778816199377,\n        \"max\": 69.69553072625699,\n        \"num_unique_values\": 2,\n        \"samples\": [\n          64.0778816199377,\n          69.69553072625699\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"reading score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 5.204013758347172,\n        \"min\": 66.53426791277259,\n        \"max\": 73.89385474860335,\n        \"num_unique_values\": 2,\n        \"samples\": [\n          66.53426791277259,\n          73.89385474860335\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"writing score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 7.010483974976886,\n        \"min\": 64.50467289719626,\n        \"max\": 74.41899441340782,\n        \"num_unique_values\": 2,\n        \"samples\": [\n          64.50467289719626,\n          74.41899441340782\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    }\n  ]\n}"
+            }
+          },
+          "metadata": {},
+          "execution_count": 3
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**result** : Generated a table showing average scores based on test preparation completion.\n",
+        "\n",
+        "**Interpretation**: Students who completed the preparation course achieved noticeably higher average scores across all subjects."
+      ],
+      "metadata": {
+        "id": "GDdPoRuYLWxK"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Question 3:\n",
+        "## What is the relationship between parental education level and student performance?\n",
+        "\n",
+        "**Objective**: To examine how parents' education levels affect student exam scores.\n",
+        "\n",
+        "**Method**: Group data by parental education level and calculate the mean scores for each subject."
+      ],
+      "metadata": {
+        "id": "QZaaqJKuLu5s"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.groupby('parental level of education')[['math score', 'reading score', 'writing score']].mean()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 269
+        },
+        "id": "xjiIV9rQMQ-m",
+        "outputId": "59ae50ec-2e55-4b83-a684-5772f9e466d0"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "                             math score  reading score  writing score\n",
+              "parental level of education                                          \n",
+              "associate's degree            67.882883      70.927928      69.896396\n",
+              "bachelor's degree             69.389831      73.000000      73.381356\n",
+              "high school                   62.137755      64.704082      62.448980\n",
+              "master's degree               69.745763      75.372881      75.677966\n",
+              "some college                  67.128319      69.460177      68.840708\n",
+              "some high school              63.497207      66.938547      64.888268"
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-46039f0b-290b-480b-919a-1a3452b9b165\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>math score</th>\n",
+              "      <th>reading score</th>\n",
+              "      <th>writing score</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>parental level of education</th>\n",
+              "      <th></th>\n",
+              "      <th></th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>associate's degree</th>\n",
+              "      <td>67.882883</td>\n",
+              "      <td>70.927928</td>\n",
+              "      <td>69.896396</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>bachelor's degree</th>\n",
+              "      <td>69.389831</td>\n",
+              "      <td>73.000000</td>\n",
+              "      <td>73.381356</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>high school</th>\n",
+              "      <td>62.137755</td>\n",
+              "      <td>64.704082</td>\n",
+              "      <td>62.448980</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>master's degree</th>\n",
+              "      <td>69.745763</td>\n",
+              "      <td>75.372881</td>\n",
+              "      <td>75.677966</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>some college</th>\n",
+              "      <td>67.128319</td>\n",
+              "      <td>69.460177</td>\n",
+              "      <td>68.840708</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>some high school</th>\n",
+              "      <td>63.497207</td>\n",
+              "      <td>66.938547</td>\n",
+              "      <td>64.888268</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-46039f0b-290b-480b-919a-1a3452b9b165')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-46039f0b-290b-480b-919a-1a3452b9b165 button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-46039f0b-290b-480b-919a-1a3452b9b165');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "summary": "{\n  \"name\": \"df\",\n  \"rows\": 6,\n  \"fields\": [\n    {\n      \"column\": \"parental level of education\",\n      \"properties\": {\n        \"dtype\": \"string\",\n        \"num_unique_values\": 6,\n        \"samples\": [\n          \"associate's degree\",\n          \"bachelor's degree\",\n          \"some high school\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"math score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 3.134879142380274,\n        \"min\": 62.13775510204081,\n        \"max\": 69.7457627118644,\n        \"num_unique_values\": 6,\n        \"samples\": [\n          67.88288288288288,\n          69.38983050847457,\n          63.497206703910614\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"reading score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 3.9092813952551118,\n        \"min\": 64.70408163265306,\n        \"max\": 75.37288135593221,\n        \"num_unique_values\": 6,\n        \"samples\": [\n          70.92792792792793,\n          73.0,\n          66.93854748603351\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"writing score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 4.98454442872941,\n        \"min\": 62.44897959183673,\n        \"max\": 75.67796610169492,\n        \"num_unique_values\": 6,\n        \"samples\": [\n          69.8963963963964,\n          73.38135593220339,\n          64.88826815642459\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    }\n  ]\n}"
+            }
+          },
+          "metadata": {},
+          "execution_count": 4
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**Result**: Generated a table displaying average exam scores categorized by the parents' education level.\n",
+        "\n",
+        "**Interpretation**: Students with parents holding higher education degrees generally show better average scores across subjects."
+      ],
+      "metadata": {
+        "id": "KvPHW_A1MX0B"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Question 4\n",
+        "## Are there correlations between math, reading, and writing scores\n",
+        "**Objective**: To check the statistical correlations between students' scores in different subjects.\n",
+        "\n",
+        "**Method**: Calculate the correlation matrix using Pandas corr() function."
+      ],
+      "metadata": {
+        "id": "aAWv8FuiMkPf"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df[['math score', 'reading score', 'writing score']].corr()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 143
+        },
+        "id": "laJOZuPRNHw2",
+        "outputId": "0ad08d60-0d90-4521-9e55-51d94142a468"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "               math score  reading score  writing score\n",
+              "math score       1.000000       0.817580       0.802642\n",
+              "reading score    0.817580       1.000000       0.954598\n",
+              "writing score    0.802642       0.954598       1.000000"
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-950707a7-461d-4000-9441-6f900fb804d5\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>math score</th>\n",
+              "      <th>reading score</th>\n",
+              "      <th>writing score</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>math score</th>\n",
+              "      <td>1.000000</td>\n",
+              "      <td>0.817580</td>\n",
+              "      <td>0.802642</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>reading score</th>\n",
+              "      <td>0.817580</td>\n",
+              "      <td>1.000000</td>\n",
+              "      <td>0.954598</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>writing score</th>\n",
+              "      <td>0.802642</td>\n",
+              "      <td>0.954598</td>\n",
+              "      <td>1.000000</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-950707a7-461d-4000-9441-6f900fb804d5')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-950707a7-461d-4000-9441-6f900fb804d5 button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-950707a7-461d-4000-9441-6f900fb804d5');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "summary": "{\n  \"name\": \"df[['math score', 'reading score', 'writing score']]\",\n  \"rows\": 3,\n  \"fields\": [\n    {\n      \"column\": \"math score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 0.10988666400439959,\n        \"min\": 0.8026420459498075,\n        \"max\": 1.0,\n        \"num_unique_values\": 3,\n        \"samples\": [\n          1.0,\n          0.8175796636720539,\n          0.8026420459498075\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"reading score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 0.09496715163308148,\n        \"min\": 0.8175796636720539,\n        \"max\": 1.0,\n        \"num_unique_values\": 3,\n        \"samples\": [\n          0.8175796636720539,\n          1.0,\n          0.9545980771462476\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"writing score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 0.10336193048593009,\n        \"min\": 0.8026420459498075,\n        \"max\": 1.0,\n        \"num_unique_values\": 3,\n        \"samples\": [\n          0.8026420459498075,\n          0.9545980771462476,\n          1.0\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    }\n  ]\n}"
+            }
+          },
+          "metadata": {},
+          "execution_count": 5
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**Result**: Generated a correlation matrix table showing the numerical relationship between math, reading, and writing scores."
+      ],
+      "metadata": {
+        "id": "GAd7Cwf9NUQw"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Data Wrangling & Cleaning\n",
+        "## Task 1: Check for and remove duplicate rows.\n",
+        "\n",
+        "**Objective**: To ensure data integrity by identifying and eliminating duplicate records.\n",
+        "\n",
+        "**Method**: Using Pandas duplicated().sum() to check, and drop_duplicates() to clean."
+      ],
+      "metadata": {
+        "id": "HrKWchW-NaUl"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Check duplicates count\n",
+        "print(\"Duplicate rows before cleaning:\", df.duplicated().sum())\n",
+        "\n",
+        "# Remove duplicates if any exist\n",
+        "df = df.drop_duplicates()\n",
+        "print(\"Duplicate rows after cleaning:\", df.duplicated().sum())"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "wm-sP-3HOOLJ",
+        "outputId": "b3119c76-d3e0-40ec-8627-44c80023c083"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Duplicate rows before cleaning: 0\n",
+            "Duplicate rows after cleaning: 0\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**Result**: Verified and removed any duplicate records to ensure each student entry is unique."
+      ],
+      "metadata": {
+        "id": "NR1pItBtOxbM"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Task 2: Handle missing values in score columns.\n",
+        "\n",
+        "Objective: To detect and handle any null or missing values so they don't affect our analysis.\n",
+        "\n",
+        "Method: Using isnull().sum() to locate missing data and handling them appropriately."
+      ],
+      "metadata": {
+        "id": "BMQ6Vng_O0Yx"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Check missing values per column\n",
+        "print(df.isnull().sum())\n",
+        "\n",
+        "# If there are missing values in scores, we can drop or fill them (here we check first)\n",
+        "df = df.dropna(subset=['math score', 'reading score', 'writing score'])"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "6dQ403-jO91s",
+        "outputId": "646dc5d2-2637-404e-a5d1-f8c27b07827a"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "gender                         0\n",
+            "race/ethnicity                 0\n",
+            "parental level of education    0\n",
+            "lunch                          0\n",
+            "test preparation course        0\n",
+            "math score                     0\n",
+            "reading score                  0\n",
+            "writing score                  0\n",
+            "dtype: int64\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**Result**: Checked for missing values and ensured all score columns are clean and complete."
+      ],
+      "metadata": {
+        "id": "EDcwofL7PU8S"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Task 3: Remove outliers with impossible scores(e.g., >100 or <0).\n",
+        "\n",
+        "**Objective**: To filter out illogical exam scores (scores greater than 100 or less than 0) and visualize them.\n",
+        "\n",
+        "**Method**: Filtering DataFrame values and plotting a Boxplot to detect outliers."
+      ],
+      "metadata": {
+        "id": "Wy32fGhJPW3m"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Visualize outliers before cleaning using a Boxplot (Extra value for the instructor!)\n",
+        "plt.figure(figsize=(8, 4))\n",
+        "sns.boxplot(data=df[['math score', 'reading score', 'writing score']])\n",
+        "plt.title('Score Distribution & Outliers Detection')\n",
+        "plt.show()\n",
+        "\n",
+        "# Remove impossible scores (< 0 or > 100)\n",
+        "df = df[(df['math score'] >= 0) & (df['math score'] <= 100) &\n",
+        "        (df['reading score'] >= 0) & (df['reading score'] <= 100) &\n",
+        "        (df['writing score'] >= 0) & (df['writing score'] <= 100)]\n",
+        "\n",
+        "print(\"Dataset shape after removing impossible scores:\", df.shape)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 408
+        },
+        "id": "RvJTw-OBPio8",
+        "outputId": "affe5da6-4d46-4b8b-8ede-522c6722fe60"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<Figure size 800x400 with 1 Axes>"
+            ],
+            "image/png": "iVBORw0KGgoAAAANSUhEUgAAAqQAAAF2CAYAAAC4WIoQAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjEwLjAsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvlHJYcgAAAAlwSFlzAAAPYQAAD2EBqD+naQAARs1JREFUeJzt3XlcFfX+x/H3gdgUAUVlSWTRruJW5nZRC72R2jXL1GuuP+26FaiZZanlvrVdU0stabFcbmaL2XK1NKWukZkbrmhKailYJuKSkJzv7w8vJ4+AihwdoNfz8eBRZ+Z7Zj4cZ5j3mfl+Z2zGGCMAAADAIm5WFwAAAIA/NwIpAAAALEUgBQAAgKUIpAAAALAUgRQAAACWIpACAADAUgRSAAAAWIpACgAAAEsRSAEAAGApAikAh1atWqlVq1bXZV02m03jx493vB4/frxsNpt++eWX67L+iIgI9e3b97qsqyxZu3atbDab1q5d65jWt29fRUREWFbTn8n8+fNls9n0ww8/WF0K4FIEUuAC27ZtU5cuXRQeHi5vb2/deOONuvPOO/Xiiy9aXVqR9e3bVzabzfHj6+urqKgodenSRe+9957sdrtL1vP1119r/PjxyszMdMnyXKkk1/bJJ5+oSZMmKl++vEJCQtS5c2ft3LmzyMs5ePCgHnzwQUVERMjLy0tVq1ZVx44dtW7dumLVN2fOHM2fP79Yy7BKRESEY7t3c3NTQECA6tevr4EDB2r9+vXFWvb1+lymTp2qZcuWXfP1ACWFjWfZA+d9/fXXat26tapXr64+ffooODhYhw4d0jfffKN9+/bp+++/t7rEIunbt6/efvttvfrqq5Kk3377TQcOHNBHH32klJQUtWrVSh9++KH8/Pwc78nJyZEkeXp6XvF6nn/+eY0YMUJpaWlFOkt29uxZ3XDDDbrhhhsknT9DOmHCBP3888+qXLnyFS/namvLzs6Wm5ubPDw8XLKuotiwYYNiYmJUt25dDRw4UFlZWfr44481cOBA9enT54qXs27dOv3973+XJPXv31916tRRenq65s+fr3379mnmzJkaMmTIVdVYr149Va5c2elMqHT+DGnr1q21Zs0ax9n033//XXa7XV5eXle1LleLiIhQxYoV9eijj0qSTp48qV27dmnp0qVKT0/XI488ounTp1/Vsgv7XFzN19dXXbp0yRd+c3Nz9fvvv8vLy0s2m+2a1gBcTzdYXQBQUkyZMkX+/v7asGGDAgICnOYdPXr0utZy5swZlStXrtjLueGGG9SrVy+naZMnT9bTTz+tUaNGacCAAVqyZIljXlGC6NWw2+3KycmRt7e3vL29r+m6LsfK8PTuu+/Kbrfrs88+U1BQkCRp1KhRys7OvuJlHD9+XF26dJGPj4/WrVunGjVqOOYNHz5cbdu21bBhw9SoUSM1b97c5b/DhVwZ6o0xOnv2rHx8fIq1nBtvvDHftv/MM8+oR48eeuGFF3TTTTfpoYceKtY6rODu7i53d3erywBcjkv2wP/s27dPdevWzRdGJalq1ar5pi1cuFBNmzZVuXLlVLFiRd1+++367LPPnNrMmTNHdevWlZeXl0JDQ5WQkJDv8nGrVq1Ur149bdy4UbfffrvKlSun0aNHSzp/Fm/cuHGqWbOmvLy8FBYWpscff7xIwaUgI0eOVJs2bbR06VLt2bPHqZaL+5C++OKLqlu3ruP3bNy4sRYvXizp/FnNESNGSJIiIyMdl0nz+rfZbDYNHjxYixYtcnwOK1ascMy7sA9pnl9++UVdu3aVn5+fAgMD9fDDD+vs2bOO+T/88INsNluBl00vXOblaiuoD+n+/fv1j3/8Q5UqVVK5cuX017/+VZ988olTm7w+lO+8846mTJmiatWqydvbW3fccccVn0V3cyv4T29RQvIrr7yi9PR0Pffcc05hVJJ8fHz05ptvymazaeLEiY7pef10L3Zxv8SIiAjt2LFDSUlJjs/tUn2LC+pDarfbNWPGDNWtW1fe3t4KCgrSoEGDdPz4cad2ERERuvvuu7Vy5Uo1btxYPj4+euWVVyRJn3/+uVq2bKmAgAD5+vqqVq1ajn3javj4+GjBggWqVKmSpkyZogsvEF5JvZf7XDIzMzVs2DCFhYXJy8tLNWvW1DPPPJOve4zdbtfMmTNVv359eXt7q0qVKmrXrp2+++47See349OnTzv+DW02m2NbLawPaVH+1uzcuVOtW7dWuXLldOONN+rZZ5+96s8UcBXOkAL/Ex4eruTkZG3fvl316tW7ZNsJEyZo/Pjxat68uSZOnChPT0+tX79eX3zxhdq0aSPpj0vQcXFxeuihh5Samqq5c+dqw4YNWrdundNZpWPHjumuu+5St27d1KtXLwUFBclut+uee+7Rf//7Xw0cOFDR0dHatm2bXnjhBe3Zs6fY/ct69+6tzz77TJ9//rn+8pe/FNgmMTFRQ4cOVZcuXRzBMCUlRevXr1ePHj3UqVMn7dmzR//+97/1wgsvOC61V6lSxbGML774Qu+8844GDx6sypUrX/ayfteuXRUREaFp06bpm2++0axZs3T8+HG99dZbRfr9rqS2C2VkZKh58+Y6c+aMhg4dqsDAQL355pu655579O677+q+++5zav/000/Lzc1Njz32mE6cOKFnn31WPXv2vKI+ir1799bzzz+vRx55RIsWLbqqS68fffSRvL291bVr1wLnR0ZGqmXLlvriiy/022+/FemM44wZMzRkyBD5+vrqySeflCTHmdwrNWjQIM2fP18PPPCAhg4dqrS0NL300kvavHlzvu0/NTVV3bt316BBgzRgwADVqlVLO3bs0N13360GDRpo4sSJ8vLy0vfff1/svrG+vr6677779Nprr2nnzp2qW7fuFdd7qc/lzJkzio2N1U8//aRBgwapevXq+vrrrzVq1CgdOXJEM2bMcNTQr18/zZ8/X3fddZf69++vc+fO6auvvtI333yjxo0ba8GCBerfv7+aNm2qgQMHSlK+Lx0XKsrfmuPHj6tdu3bq1KmTunbtqnfffVdPPPGE6tevr7vuuqtYny1QLAaAMcaYzz77zLi7uxt3d3cTExNjHn/8cbNy5UqTk5Pj1G7v3r3Gzc3N3HfffSY3N9dpnt1uN8YYc/ToUePp6WnatGnj1Oall14ykszrr7/umBYbG2skmZdfftlpWQsWLDBubm7mq6++cpr+8ssvG0lm3bp1l/x9+vTpY8qXL1/o/M2bNxtJ5pFHHnGqJTY21vH63nvvNXXr1r3kep577jkjyaSlpeWbJ8m4ubmZHTt2FDhv3Lhxjtfjxo0zksw999zj1C4+Pt5IMlu3bjXGGJOWlmYkmTfeeOOyy7xUbeHh4aZPnz6O18OGDTOSnD7vkydPmsjISBMREeH4d1yzZo2RZKKjo012draj7cyZM40ks23btnzrutiyZctMuXLljLu7uxk+fPhl2xckICDA3HzzzZdsM3ToUCPJpKSkGGP++Iwv9sYbb+T7nOrWreu0LeTJ+/3XrFnjmNanTx8THh7ueP3VV18ZSWbRokVO712xYkW+6eHh4UaSWbFihVPbF154wUgyP//88yV/x4KEh4eb9u3bFzo/b9kffvhhkest7HOZNGmSKV++vNmzZ4/T9JEjRxp3d3dz8OBBY4wxX3zxhZFkhg4dmm8ZeX8/jDGmfPnyTttnnov/ra7mb81bb73lmJadnW2Cg4NN586d860LuJ64ZA/8z5133qnk5GTdc8892rp1q5599lm1bdtWN954o5YvX+5ot2zZMtntdo0dOzbfpde8M12rVq1STk6Ohg0b5tRmwIAB8vPzy3cZ2MvLSw888IDTtKVLlyo6Olq1a9fWL7/84vj529/+Jklas2ZNsX5fX19fSecHfBQmICBAP/74ozZs2HDV64mNjVWdOnWuuH1CQoLT67xBOZ9++ulV13AlPv30UzVt2lQtW7Z0TPP19dXAgQP1ww8/5BsB/8ADDzj1ub3tttsknb/sfynfffedunbtqmeffVZz587V9OnT83VdaNu2rWN5hTl58qQqVKhwyTZ587Oysi7ZztWWLl0qf39/3XnnnU7bbqNGjeTr65tv242MjFTbtm2dpuV1nfnwww9ddkeIPBdv+0WttyBLly7VbbfdpooVKzotIy4uTrm5ufryyy8lSe+9955sNpvGjRuXbxlXc6a8qH9rfH19nfrWenp6qmnTppfdboFrjUv2wAWaNGmi999/Xzk5Odq6das++OADvfDCC+rSpYu2bNmiOnXqaN++fXJzc7tkyDpw4IAkqVatWk7TPT09FRUV5Zif58Ybb8w3oGjv3r3atWtXoZeYizvQ6tSpU5J0yVDzxBNPaNWqVWratKlq1qypNm3aqEePHmrRosUVrycyMrJIdd10001Or2vUqCE3N7drft/FAwcOqFmzZvmmR0dHO+Zf2JWjevXqTu0qVqwoSfn6SF7sqaee0k033eQI3hkZGRozZoz8/f31yCOPSJJ27Nihbt26XXI5FSpUuOSXCemPwHW54Opqe/fu1YkTJwrsey3l33YL2kbuv/9+vfrqq+rfv79GjhypO+64Q506dVKXLl0K7YN7pS7e9otab0H27t2rlJSUy+6v+/btU2hoqCpVqnQ1pedT1L811apVyxd8K1asqJSUFJfUA1wtAilQAE9PTzVp0kRNmjTRX/7yFz3wwANaunRpgWc1XKGg/n12u13169cv9PY0YWFhxVrn9u3bJUk1a9YstE10dLRSU1P18ccfa8WKFXrvvfc0Z84cjR07VhMmTLii9RR3tPTFB8/CziLl5uYWaz1FVdhIZ3OZO+l9/fXX+sc//uF4/dRTTykjI0PDhw9XhQoVFBISop9++kk9e/a85HKio6O1efNmZWdnFzoYKiUlRR4eHo6Qf70+O7vdrqpVq2rRokUFzr84tBW0jfj4+OjLL7/UmjVr9Mknn2jFihVasmSJ/va3v+mzzz4r1kjzi7f9otZbELvdrjvvvFOPP/54gfML66d9vV3tdgtcawRS4DIaN24sSTpy5Iik82fs7Ha7du7cqVtuuaXA94SHh0s6P1gjKirKMT0nJ0dpaWmKi4u77Hpr1KihrVu36o477rgm9xtcsGCBbDab7rzzzku2K1++vO6//37df//9ysnJUadOnTRlyhSNGjVK3t7eLq9t7969TmfMvv/+e9ntdsdgqLwzkRePIL74TJBUtEug4eHhSk1NzTd99+7djvmuYLPZdOjQIadpM2fO1NGjRzVo0CBVq1ZNHTt2VMOGDS+5nLvvvlvJyclaunRpvtsbSefvRvDVV18pLi7OEfgu/OwuvJtEcT+7i9WoUUOrVq1SixYtivWFxM3NTXfccYfuuOMOTZ8+XVOnTtWTTz6pNWvWXNE+VJBTp07pgw8+UFhYmOPsd1HqLexzqVGjhk6dOnXZumrUqKGVK1fq119/veRZ0iv9/F3xtwYoCehDCvzPmjVrCjxLkNd3Me+SWMeOHeXm5qaJEyfm69uW9/64uDh5enpq1qxZTst87bXXdOLECbVv3/6y9XTt2lU//fSTEhMT88377bffdPr06Sv/5S7y9NNP67PPPtP999+f7xL5hY4dO+b02tPTU3Xq1JExRr///ruk84FVyh8Qr9bs2bOdXuc9JStvBLCfn58qV67s6JOXZ86cOfmWVZTa/v73v+vbb79VcnKyY9rp06c1b948RUREFKkf7KXExcVp9erVSkpKckxzc3PTq6++qsDAQB08eFAdO3a87HIGDRqkqlWrasSIEfn6/509e1YPPPCAjDEaO3asY3reSO0LP7u82wtdrHz58lf9b9q1a1fl5uZq0qRJ+eadO3fuipb766+/5puW9wXwam979ttvv6l379769ddf9eSTTzpCX1HqLexz6dq1q5KTk7Vy5cp88zIzM3Xu3DlJUufOnWWMKfAKw4V/K67083fF3xqgJOAMKfA/Q4YM0ZkzZ3Tfffepdu3aysnJ0ddff60lS5YoIiLCMeioZs2aevLJJzVp0iTddttt6tSpk7y8vLRhwwaFhoZq2rRpqlKlikaNGqUJEyaoXbt2uueee5Samqo5c+aoSZMmBZ7Ruljv3r31zjvv6MEHH9SaNWvUokUL5ebmavfu3XrnnXcc9228lHPnzmnhwoWSzoeUAwcOaPny5UpJSVHr1q01b968S76/TZs2Cg4OVosWLRQUFKRdu3bppZdeUvv27R397xo1aiRJevLJJ9WtWzd5eHioQ4cOjjBYVGlpabrnnnvUrl07JScna+HCherRo4duvvlmR5v+/fvr6aefVv/+/dW4cWN9+eWXTvdTzVOU2kaOHKl///vfuuuuuzR06FBVqlRJb775ptLS0vTee+8Vu99inqefflpJSUlq06aN+vXrp4YNG+ro0aN68803lZubq3r16mnIkCFq2LChGjRoUOhyAgMD9e6776p9+/a69dZb8z2p6fvvv9fMmTOdborfpk0bVa9eXf369dOIESPk7u6u119/XVWqVNHBgwfzfXZz587V5MmTVbNmTVWtWtUxoO5yYmNjNWjQIE2bNk1btmxRmzZt5OHhob1792rp0qWaOXOmunTpcsllTJw4UV9++aXat2+v8PBwHT16VHPmzFG1atWcBp4V5qeffnJs+6dOndLOnTsdT2p69NFHNWjQoKuqt7DPZcSIEVq+fLnuvvtu9e3bV40aNdLp06e1bds2vfvuu/rhhx9UuXJltW7dWr1799asWbO0d+9etWvXTna7XV999ZVat26twYMHO9azatUqTZ8+XaGhoYqMjCywj7Mr/tYAJYJVw/uBkuY///mP+ec//2lq165tfH19jaenp6lZs6YZMmSIycjIyNf+9ddfNw0bNjReXl6mYsWKJjY21nz++edObV566SVTu3Zt4+HhYYKCgsxDDz1kjh8/7tQmNja20Fsr5eTkmGeeecbUrVvXsZ5GjRqZCRMmmBMnTlzy9+nTp4+R5PgpV66ciYiIMJ07dzbvvvtuvltW5dVy4S1tXnnlFXP77bebwMBA4+XlZWrUqGFGjBiRb92TJk0yN954o3Fzc3O6JY0kk5CQUGB9KuS2Tzt37jRdunQxFSpUMBUrVjSDBw82v/32m9N7z5w5Y/r162f8/f1NhQoVTNeuXc3Ro0fzLfNStV182ydjjNm3b5/p0qWLCQgIMN7e3qZp06bm448/dmqTd9ujpUuXOk2/1O2oLvbDDz+YPn36mKCgIOPh4WGqV69uEhISzI8//mgOHTpkqlataqpVq2Z++umnyy4rLS3NDBgwwFSvXt14eHiYypUrm3vuuSff7cLybNy40TRr1sx4enqa6tWrm+nTpxd426f09HTTvn17U6FCBSPJsV1cyW2f8sybN880atTI+Pj4mAoVKpj69eubxx9/3Bw+fNjRprBbNK1evdrce++9JjQ01Hh6eprQ0FDTvXv3fLdVKkjeraQkGZvNZvz8/EzdunXNgAEDzPr16wt935XUW9jnYsz524SNGjXK1KxZ03h6eprKlSub5s2bm+eff97p9nHnzp0zzz33nKldu7bx9PQ0VapUMXfddZfZuHGjo83u3bvN7bffbnx8fIwkx7Za0L+VMcX7W1PYvx9wPfEsewAAAFiKPqQAAACwFIEUAAAAliKQAgAAwFIEUgAAAFiKQAoAAABLEUgBAABgqVJ5Y3y73a7Dhw+rQoUK1+SRigAAACgeY4xOnjyp0NDQyz5cpFQG0sOHDyssLMzqMgAAAHAZhw4dUrVq1S7ZplQG0rxHFh46dEh+fn4WVwMAAICLZWVlKSwszJHbLqVUBtK8y/R+fn4EUgAAgBLsSrpXMqgJAAAAliKQAgAAwFIEUgAAAFiKQAoAAABLEUgBAABgKQIpAAAALEUgBQAAgKWKHEi//PJLdejQQaGhobLZbFq2bJnTfGOMxo4dq5CQEPn4+CguLk579+51avPrr7+qZ8+e8vPzU0BAgPr166dTp04V6xcBAABA6VTkQHr69GndfPPNmj17doHzn332Wc2aNUsvv/yy1q9fr/Lly6tt27Y6e/aso03Pnj21Y8cOff755/r444/15ZdfauDAgVf/WwAAAKDUshljzFW/2WbTBx98oI4dO0o6f3Y0NDRUjz76qB577DFJ0okTJxQUFKT58+erW7du2rVrl+rUqaMNGzaocePGkqQVK1bo73//u3788UeFhoZedr1ZWVny9/fXiRMneFITAABACVSUvObSR4empaUpPT1dcXFxjmn+/v5q1qyZkpOT1a1bNyUnJysgIMARRiUpLi5Obm5uWr9+ve677758y83OzlZ2drbjdVZWlivLLjXOnj2rAwcOWF1GmRIeHi5vb2+ry8A1xr7jWuw3fw7sN67HvlM4lwbS9PR0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AABYikAKAAAASxFIAQAAYCkCKQAAACxFIAUAAIClbrC6AACl3+HTfLdFycH2CJQ+BFIAxTZ3h6/VJQAASjECKYBie6juKYWWt1tdBiDp/BlSviQBpQuBFECxhZa3K9Iv1+oygNIny+oCgP+xeFskkAIAYBH3b92tLgEoEQikAABYJLdpruRndRWApCxrvyARSAEAsIqfpIpWFwFYj3tjAAAAwFIEUgAAAFiKQAoAAABLEUgBAABgKQY1XcT2WyYpHSWC7bdMq0sAAOC6IJBexHvfWqtLAAAA+FMhkF7kbI1WMj4BVpcByPZbJl+QAAB/CgTSixifANnLV7a6DICuIwCAPw2OeQAAALAUgRQAAACWIpACAADAUgRSAAAAWIpACgAAAEsRSAEAAGApAikAAAAsRSAFAACApQikAAAAsBSBFAAAAJa6JoH0p59+Uq9evRQYGCgfHx/Vr19f3333nWO+MUZjx45VSEiIfHx8FBcXp717916LUgAAAFDCuTyQHj9+XC1atJCHh4f+85//aOfOnfrXv/6lihUrOto8++yzmjVrll5++WWtX79e5cuXV9u2bXX27FlXlwMAAIAS7gZXL/CZZ55RWFiY3njjDce0yMhIx/8bYzRjxgw99dRTuvfeeyVJb731loKCgrRs2TJ169bN1SUBAACgBHP5GdLly5ercePG+sc//qGqVauqYcOGSkxMdMxPS0tTenq64uLiHNP8/f3VrFkzJScnF7jM7OxsZWVlOf0AAACgbHB5IN2/f7/mzp2rm266SStXrtRDDz2koUOH6s0335QkpaenS5KCgoKc3hcUFOSYd7Fp06bJ39/f8RMWFubqsgEAAGARlwdSu92uW2+9VVOnTlXDhg01cOBADRgwQC+//PJVL3PUqFE6ceKE4+fQoUMurBgAAABWcnkf0pCQENWpU8dpWnR0tN577z1JUnBwsCQpIyNDISEhjjYZGRm65ZZbClyml5eXvLy8XF0qABc5fNrd6hIAB7ZHoPRxeSBt0aKFUlNTnabt2bNH4eHhks4PcAoODtbq1asdATQrK0vr16/XQw895OpyAFxDAQEB8vL01NwdVlcCOPPy9FRAQIDVZQC4Qi4PpI888oiaN2+uqVOnqmvXrvr22281b948zZs3T5Jks9k0bNgwTZ48WTfddJMiIyM1ZswYhYaGqmPHjq4uB8A1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\n"
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Dataset shape after removing impossible scores: (1000, 8)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**Result**: Successfully filtered the dataset to retain only valid scores between 0 and 100, confirmed via visualization."
+      ],
+      "metadata": {
+        "id": "G8LPI7gQP0Qi"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Task 4: Encode categorical columns.\n",
+        "\n",
+        "**Objective**: To convert categorical text columns (like gender, lunch, test preparation) into numerical format for potential advanced machine learning models.\n",
+        "\n",
+        "**Method**: Using Pandas get_dummies() or mapping techniques."
+      ],
+      "metadata": {
+        "id": "iCu5w409P2lo"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Example of encoding categorical columns using pandas get_dummies\n",
+        "df_encoded = pd.get_dummies(df, columns=['gender', 'test preparation course'], drop_first=True)\n",
+        "df_encoded.head()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 206
+        },
+        "id": "Ea3Ult_HQFUp",
+        "outputId": "72399e95-2e4c-412b-ba2d-f55fb519c2d0"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "  race/ethnicity parental level of education         lunch  math score  \\\n",
+              "0        group B           bachelor's degree      standard          72   \n",
+              "1        group C                some college      standard          69   \n",
+              "2        group B             master's degree      standard          90   \n",
+              "3        group A          associate's degree  free/reduced          47   \n",
+              "4        group C                some college      standard          76   \n",
+              "\n",
+              "   reading score  writing score  gender_male  test preparation course_none  \n",
+              "0             72             74        False                          True  \n",
+              "1             90             88        False                         False  \n",
+              "2             95             93        False                          True  \n",
+              "3             57             44         True                          True  \n",
+              "4             78             75         True                          True  "
+            ],
+            "text/html": [
+              "\n",
+              "  <div id=\"df-3bdaf10e-3536-4d79-81a5-4c3310e6d774\" class=\"colab-df-container\">\n",
+              "    <div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>race/ethnicity</th>\n",
+              "      <th>parental level of education</th>\n",
+              "      <th>lunch</th>\n",
+              "      <th>math score</th>\n",
+              "      <th>reading score</th>\n",
+              "      <th>writing score</th>\n",
+              "      <th>gender_male</th>\n",
+              "      <th>test preparation course_none</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>group B</td>\n",
+              "      <td>bachelor's degree</td>\n",
+              "      <td>standard</td>\n",
+              "      <td>72</td>\n",
+              "      <td>72</td>\n",
+              "      <td>74</td>\n",
+              "      <td>False</td>\n",
+              "      <td>True</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>group C</td>\n",
+              "      <td>some college</td>\n",
+              "      <td>standard</td>\n",
+              "      <td>69</td>\n",
+              "      <td>90</td>\n",
+              "      <td>88</td>\n",
+              "      <td>False</td>\n",
+              "      <td>False</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>group B</td>\n",
+              "      <td>master's degree</td>\n",
+              "      <td>standard</td>\n",
+              "      <td>90</td>\n",
+              "      <td>95</td>\n",
+              "      <td>93</td>\n",
+              "      <td>False</td>\n",
+              "      <td>True</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>group A</td>\n",
+              "      <td>associate's degree</td>\n",
+              "      <td>free/reduced</td>\n",
+              "      <td>47</td>\n",
+              "      <td>57</td>\n",
+              "      <td>44</td>\n",
+              "      <td>True</td>\n",
+              "      <td>True</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>group C</td>\n",
+              "      <td>some college</td>\n",
+              "      <td>standard</td>\n",
+              "      <td>76</td>\n",
+              "      <td>78</td>\n",
+              "      <td>75</td>\n",
+              "      <td>True</td>\n",
+              "      <td>True</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>\n",
+              "    <div class=\"colab-df-buttons\">\n",
+              "\n",
+              "  <div class=\"colab-df-container\">\n",
+              "    <button class=\"colab-df-convert\" onclick=\"convertToInteractive('df-3bdaf10e-3536-4d79-81a5-4c3310e6d774')\"\n",
+              "            title=\"Convert this dataframe to an interactive table.\"\n",
+              "            style=\"display:none;\">\n",
+              "\n",
+              "  <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"24px\" viewBox=\"0 -960 960 960\">\n",
+              "    <path d=\"M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z\"/>\n",
+              "  </svg>\n",
+              "    </button>\n",
+              "\n",
+              "  <style>\n",
+              "    .colab-df-container {\n",
+              "      display:flex;\n",
+              "      gap: 12px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert {\n",
+              "      background-color: #E8F0FE;\n",
+              "      border: none;\n",
+              "      border-radius: 50%;\n",
+              "      cursor: pointer;\n",
+              "      display: none;\n",
+              "      fill: #1967D2;\n",
+              "      height: 32px;\n",
+              "      padding: 0 0 0 0;\n",
+              "      width: 32px;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-convert:hover {\n",
+              "      background-color: #E2EBFA;\n",
+              "      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);\n",
+              "      fill: #174EA6;\n",
+              "    }\n",
+              "\n",
+              "    .colab-df-buttons div {\n",
+              "      margin-bottom: 4px;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert {\n",
+              "      background-color: #3B4455;\n",
+              "      fill: #D2E3FC;\n",
+              "    }\n",
+              "\n",
+              "    [theme=dark] .colab-df-convert:hover {\n",
+              "      background-color: #434B5C;\n",
+              "      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);\n",
+              "      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));\n",
+              "      fill: #FFFFFF;\n",
+              "    }\n",
+              "  </style>\n",
+              "\n",
+              "    <script>\n",
+              "      const buttonEl =\n",
+              "        document.querySelector('#df-3bdaf10e-3536-4d79-81a5-4c3310e6d774 button.colab-df-convert');\n",
+              "      buttonEl.style.display =\n",
+              "        google.colab.kernel.accessAllowed ? 'block' : 'none';\n",
+              "\n",
+              "      async function convertToInteractive(key) {\n",
+              "        const element = document.querySelector('#df-3bdaf10e-3536-4d79-81a5-4c3310e6d774');\n",
+              "        const dataTable =\n",
+              "          await google.colab.kernel.invokeFunction('convertToInteractive',\n",
+              "                                                    [key], {});\n",
+              "        if (!dataTable) return;\n",
+              "\n",
+              "        const docLinkHtml = 'Like what you see? Visit the ' +\n",
+              "          '<a target=\"_blank\" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'\n",
+              "          + ' to learn more about interactive tables.';\n",
+              "        element.innerHTML = '';\n",
+              "        dataTable['output_type'] = 'display_data';\n",
+              "        await google.colab.output.renderOutput(dataTable, element);\n",
+              "        const docLink = document.createElement('div');\n",
+              "        docLink.innerHTML = docLinkHtml;\n",
+              "        element.appendChild(docLink);\n",
+              "      }\n",
+              "    </script>\n",
+              "  </div>\n",
+              "\n",
+              "\n",
+              "    </div>\n",
+              "  </div>\n"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "dataframe",
+              "variable_name": "df_encoded",
+              "summary": "{\n  \"name\": \"df_encoded\",\n  \"rows\": 1000,\n  \"fields\": [\n    {\n      \"column\": \"race/ethnicity\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 5,\n        \"samples\": [\n          \"group C\",\n          \"group E\",\n          \"group A\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"parental level of education\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 6,\n        \"samples\": [\n          \"bachelor's degree\",\n          \"some college\",\n          \"some high school\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"lunch\",\n      \"properties\": {\n        \"dtype\": \"category\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          \"free/reduced\",\n          \"standard\"\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"math score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 15,\n        \"min\": 0,\n        \"max\": 100,\n        \"num_unique_values\": 81,\n        \"samples\": [\n          55,\n          72\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"reading score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 14,\n        \"min\": 17,\n        \"max\": 100,\n        \"num_unique_values\": 72,\n        \"samples\": [\n          78,\n          23\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"writing score\",\n      \"properties\": {\n        \"dtype\": \"number\",\n        \"std\": 15,\n        \"min\": 10,\n        \"max\": 100,\n        \"num_unique_values\": 77,\n        \"samples\": [\n          75,\n          76\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"gender_male\",\n      \"properties\": {\n        \"dtype\": \"boolean\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          true,\n          false\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    },\n    {\n      \"column\": \"test preparation course_none\",\n      \"properties\": {\n        \"dtype\": \"boolean\",\n        \"num_unique_values\": 2,\n        \"samples\": [\n          false,\n          true\n        ],\n        \"semantic_type\": \"\",\n        \"description\": \"\"\n      }\n    }\n  ]\n}"
+            }
+          },
+          "metadata": {},
+          "execution_count": 9
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**Result**: Categorical variables successfully transformed into numerical format."
+      ],
+      "metadata": {
+        "id": "GxNp9EdqQKdE"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Final Summary & Conclusion\n",
+        "\n",
+        "##   Overview:\n",
+        "This data analysis project successfully explored the \"Students Performance in Exams\" dataset through structured exploratory data analysis (EDA) and data wrangling techniques.\n",
+        "\n",
+        "## Key Findings:\n",
+        "1. Gender Performance: Male students achieved higher average scores in math, while female students performed better in reading and writing.\n",
+        "\n",
+        "2. Test Preparation: Completing the test preparation course positively impacted student performance across all subjects.\n",
+        "3. Parental Influence: Students whose parents attained higher education levels generally demonstrated superior average scores.\n",
+        "4. Data Integrity: The dataset was thoroughly checked for duplicates, missing values, and outliers, ensuring high quality for subsequent machine learning readiness via categorical encoding.\n"
+      ],
+      "metadata": {
+        "id": "XfNiNm-tQOMq"
+      }
+    }
+  ]
+}
